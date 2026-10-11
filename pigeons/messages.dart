@@ -6,8 +6,7 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/messages.dart',
     dartPackageName: 'dji',
-    kotlinOut:
-        'android/src/main/kotlin/cloud/dragonx/plugin/flutter/dji/Messages.g.kt',
+    kotlinOut: 'android/src/main/kotlin/cloud/dragonx/plugin/flutter/dji/Messages.g.kt',
     kotlinOptions: KotlinOptions(package: 'cloud.dragonx.plugin.flutter.dji'),
     swiftOut: 'ios/Classes/Messages.g.swift',
   ),

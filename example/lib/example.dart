@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
 import 'package:dji/dji.dart';
+
 import 'constants.dart';
 
 class ExampleWidget extends StatefulWidget {
@@ -108,10 +109,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
 
   Future<void> _registerApp() async {
     try {
-      developer.log(
-        'registerApp requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('registerApp requested', name: kLogKindDjiFlutterPlugin);
       await Dji.registerApp();
     } on PlatformException catch (e) {
       developer.log(
@@ -130,10 +128,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
 
   Future<void> _connectDrone() async {
     try {
-      developer.log(
-        'connectDrone requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('connectDrone requested', name: kLogKindDjiFlutterPlugin);
       await Dji.connectDrone();
     } on PlatformException catch (e) {
       developer.log(
@@ -174,10 +169,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
 
   Future<void> _delegateDrone() async {
     try {
-      developer.log(
-        'delegateDrone requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('delegateDrone requested', name: kLogKindDjiFlutterPlugin);
       await Dji.delegateDrone();
     } on PlatformException catch (e) {
       developer.log(
@@ -196,10 +188,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
 
   Future<void> _takeOff() async {
     try {
-      developer.log(
-        'Takeoff requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Takeoff requested', name: kLogKindDjiFlutterPlugin);
       await Dji.takeOff();
     } on PlatformException catch (e) {
       developer.log(
@@ -208,20 +197,13 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
         name: kLogKindDjiFlutterPlugin,
       );
     } catch (e) {
-      developer.log(
-        'Takeoff Error',
-        error: e,
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Takeoff Error', error: e, name: kLogKindDjiFlutterPlugin);
     }
   }
 
   Future<void> _land() async {
     try {
-      developer.log(
-        'Land requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Land requested', name: kLogKindDjiFlutterPlugin);
       await Dji.land();
     } on PlatformException catch (e) {
       developer.log(
@@ -230,11 +212,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
         name: kLogKindDjiFlutterPlugin,
       );
     } catch (e) {
-      developer.log(
-        'Land Error',
-        error: e,
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Land Error', error: e, name: kLogKindDjiFlutterPlugin);
     }
   }
 
@@ -277,37 +255,34 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
 
       if (droneHomeLocation.latitude == 0 || droneHomeLocation.longitude == 0) {
         developer.log(
-            'Invalid drone\'s home location - unable to start the flight',
-            name: kLogKindDjiFlutterPlugin);
+          'Invalid drone\'s home location - unable to start the flight',
+          name: kLogKindDjiFlutterPlugin,
+        );
         return;
       }
 
       Flight flight = Flight.fromJson({
         'timeline': [
-          {
-            'type': 'takeOff',
-          },
-          {
-            'type': 'startRecordVideo',
-          },
+          {'type': 'takeOff'},
+          {'type': 'startRecordVideo'},
           {
             'type': 'waypointMission',
             // For example purposes, we set our Point of Interest a few meters to the north (in relation to the Drone's Home Location).
             // Note: Setting the precision to 8 decimals (~1.1mm accuracy, which is the GPS limit).
             'pointOfInterest': {
-              'latitude': ((droneHomeLocation.latitude + (20 * 0.00000899322)) *
+              'latitude':
+                  ((droneHomeLocation.latitude + (20 * 0.00000899322)) *
                           100000000)
                       .round() /
                   100000000,
               'longitude':
                   ((droneHomeLocation.longitude + (0 * 0.00000899322)) *
-                              100000000)
-                          .round() /
-                      100000000,
+                          100000000)
+                      .round() /
+                  100000000,
               'altitude': droneHomeLocation.altitude,
             },
-            'maxFlightSpeed':
-                15.0, // Max Flight Speed is 15.0. If you enter a higher value - the waypoint mission won't start due to DJI limits.
+            'maxFlightSpeed': 15.0, // Max Flight Speed is 15.0. If you enter a higher value - the waypoint mission won't start due to DJI limits.
             'autoFlightSpeed': 10.0,
             'finishedAction': 'noAction',
             'headingMode': 'towardPointOfInterest',
@@ -385,25 +360,19 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
               },
             ],
           },
-          {
-            'type': 'stopRecordVideo',
-          },
-          {
-            'type': 'singleShootPhoto',
-          },
-          {
-            'type': 'land',
-          },
+          {'type': 'stopRecordVideo'},
+          {'type': 'singleShootPhoto'},
+          {'type': 'land'},
         ],
       });
 
       // Converting any vector definitions in waypoint-mission to locations
       for (dynamic element in flight.timeline) {
         if (element.type == FlightElementType.waypointMission) {
-          CoordinatesConvertion
-              .convertWaypointMissionVectorsToLocationsWithGimbalPitch(
-                  flightElementWaypointMission: element,
-                  droneHomeLocation: droneHomeLocation);
+          CoordinatesConvertion.convertWaypointMissionVectorsToLocationsWithGimbalPitch(
+            flightElementWaypointMission: element,
+            droneHomeLocation: droneHomeLocation,
+          );
         }
       }
 
@@ -412,10 +381,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
         name: kLogKindDjiFlutterPlugin,
       );
 
-      developer.log(
-        'Start Flight requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Start Flight requested', name: kLogKindDjiFlutterPlugin);
       await Dji.start(flight: flight);
     } on PlatformException catch (e) {
       developer.log(
@@ -453,26 +419,18 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
   }
 
   Future<void> _updateGimbalRotatePitch() async {
-    await Dji.gimbalRotatePitch(
-      degrees: _gimbalPitchInDegrees,
-    );
+    await Dji.gimbalRotatePitch(degrees: _gimbalPitchInDegrees);
   }
 
   Future<List<Media?>?> _getMediaList() async {
     List<Media?>? mediaList;
 
     try {
-      developer.log(
-        'Get Media List requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Get Media List requested', name: kLogKindDjiFlutterPlugin);
 
       mediaList = await Dji.getMediaList();
 
-      developer.log(
-        'Media List: $mediaList',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Media List: $mediaList', name: kLogKindDjiFlutterPlugin);
     } on PlatformException catch (e) {
       developer.log(
         'Get Media List PlatformException Error',
@@ -492,10 +450,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
 
   Future<void> _download() async {
     try {
-      developer.log(
-        'Download requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Download requested', name: kLogKindDjiFlutterPlugin);
       // Downloading media file number "0" (a.k.a index: 0)
       final fileUrl = await Dji.downloadMedia(0);
       developer.log(
@@ -509,32 +464,19 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
         name: kLogKindDjiFlutterPlugin,
       );
     } catch (e) {
-      developer.log(
-        'Download Error',
-        error: e,
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Download Error', error: e, name: kLogKindDjiFlutterPlugin);
     }
   }
 
   Future<void> _delete() async {
     try {
-      developer.log(
-        'Delete requested',
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Delete requested', name: kLogKindDjiFlutterPlugin);
       // Deleting media file number "0" (a.k.a index: 0)
       final deleted = await Dji.deleteMedia(0);
       if (deleted == true) {
-        developer.log(
-          'Deleted successfully',
-          name: kLogKindDjiFlutterPlugin,
-        );
+        developer.log('Deleted successfully', name: kLogKindDjiFlutterPlugin);
       } else {
-        developer.log(
-          'Delete failed',
-          name: kLogKindDjiFlutterPlugin,
-        );
+        developer.log('Delete failed', name: kLogKindDjiFlutterPlugin);
       }
     } on PlatformException catch (e) {
       developer.log(
@@ -543,11 +485,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
         name: kLogKindDjiFlutterPlugin,
       );
     } catch (e) {
-      developer.log(
-        'Delete Error',
-        error: e,
-        name: kLogKindDjiFlutterPlugin,
-      );
+      developer.log('Delete Error', error: e, name: kLogKindDjiFlutterPlugin);
     }
   }
 
@@ -599,9 +537,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('DJI Flutter Plugin Example'),
-        ),
+        appBar: AppBar(title: const Text('DJI Flutter Plugin Example')),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -627,7 +563,9 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                     child: SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: kSpacer, vertical: kSpacer * 0.5),
+                          horizontal: kSpacer,
+                          vertical: kSpacer * 0.5,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -753,9 +691,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                       title: const Text('Error Description'),
                                       content: SingleChildScrollView(
                                         child: ListBody(
-                                          children: [
-                                            Text(_droneError),
-                                          ],
+                                          children: [Text(_droneError)],
                                         ),
                                       ),
                                       actions: <Widget>[
@@ -797,18 +733,12 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                               label: 'Speed',
                               value: _droneSpeed,
                             ),
-                            DronePropertyRow(
-                              label: 'Roll',
-                              value: _droneRoll,
-                            ),
+                            DronePropertyRow(label: 'Roll', value: _droneRoll),
                             DronePropertyRow(
                               label: 'Pitch',
                               value: _dronePitch,
                             ),
-                            DronePropertyRow(
-                              label: 'Yaw',
-                              value: _droneYaw,
-                            ),
+                            DronePropertyRow(label: 'Yaw', value: _droneYaw),
                             const SizedBox(height: kSpacer),
                             DefaultTabController(
                               length: 3,
@@ -818,23 +748,26 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                     labelColor: Colors.black,
                                     tabs: [
                                       Tab(
-                                          text: 'Wifi',
-                                          icon: Icon(
-                                            Icons.wifi,
-                                            color: Colors.black,
-                                          )),
+                                        text: 'Wifi',
+                                        icon: Icon(
+                                          Icons.wifi,
+                                          color: Colors.black,
+                                        ),
+                                      ),
                                       Tab(
-                                          text: 'Remote',
-                                          icon: Icon(
-                                            Icons.radio,
-                                            color: Colors.black,
-                                          )),
+                                        text: 'Remote',
+                                        icon: Icon(
+                                          Icons.radio,
+                                          color: Colors.black,
+                                        ),
+                                      ),
                                       Tab(
-                                          text: 'Gimbal',
-                                          icon: Icon(
-                                            Icons.camera,
-                                            color: Colors.black,
-                                          )),
+                                        text: 'Gimbal',
+                                        icon: Icon(
+                                          Icons.camera,
+                                          color: Colors.black,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(height: kSpacer),
@@ -847,9 +780,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             const SizedBox(height: kSpacer),
                                             const Text(
                                               'Left Stick Horizontal (Heading)',
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
                                             Slider(
                                               value: _leftStickHorizontal,
@@ -869,9 +800,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             ),
                                             const Text(
                                               'Left Stick Vertical (Up/Down)',
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
                                             Slider(
                                               value: _leftStickVertical,
@@ -891,9 +820,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             ),
                                             const Text(
                                               'Right Stick Horizontal (Left/Right)',
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
                                             Slider(
                                               value: _rightStickHorizontal,
@@ -913,9 +840,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             ),
                                             const Text(
                                               'Right Stick Vertical (Forward/Back)',
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
                                             Slider(
                                               value: _rightStickVertical,
@@ -940,9 +865,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             const SizedBox(height: kSpacer),
                                             const Text(
                                               'Pitch (Backward/Forward)',
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
                                             Slider(
                                               value: _virtualStickPitch,
@@ -960,9 +883,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             ),
                                             const Text(
                                               'Roll (Left/Right)',
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
                                             Slider(
                                               value: _virtualStickRoll,
@@ -980,9 +901,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             ),
                                             const Text(
                                               'Yaw (Heading)',
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
                                             Slider(
                                               value: _virtualStickYaw,
@@ -1000,9 +919,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             ),
                                             const Text(
                                               'Vertical Throttle (Up/Down)',
-                                              style: TextStyle(
-                                                fontSize: 10.0,
-                                              ),
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
                                             Slider(
                                               value:
@@ -1023,67 +940,65 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
                                             ),
                                           ],
                                         ),
-                                        Column(children: [
-                                          const SizedBox(height: kSpacer),
-                                          const Text(
-                                            'Gimbal Pitch in Degrees',
-                                            style: TextStyle(
-                                              fontSize: 10.0,
+                                        Column(
+                                          children: [
+                                            const SizedBox(height: kSpacer),
+                                            const Text(
+                                              'Gimbal Pitch in Degrees',
+                                              style: TextStyle(fontSize: 10.0),
                                             ),
-                                          ),
-                                          Slider(
-                                            value: _gimbalPitchInDegrees,
-                                            min: -90.0,
-                                            max: 0,
-                                            divisions: 90,
-                                            label: _gimbalPitchInDegrees
-                                                .toStringAsFixed(2),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                _gimbalPitchInDegrees = value;
-                                              });
-                                            },
-                                            onChangeEnd: (value) {
-                                              _updateGimbalRotatePitch();
-                                            },
-                                          ),
-                                          OutlinedButton(
-                                            key: const Key('startVideoRecord'),
-                                            child: const Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Icon(
-                                                  Icons.fiber_manual_record,
-                                                ),
-                                                SizedBox(
-                                                  width: kSpacer / 2,
-                                                ),
-                                                Text('Start Recording'),
-                                              ],
+                                            Slider(
+                                              value: _gimbalPitchInDegrees,
+                                              min: -90.0,
+                                              max: 0,
+                                              divisions: 90,
+                                              label: _gimbalPitchInDegrees
+                                                  .toStringAsFixed(2),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _gimbalPitchInDegrees = value;
+                                                });
+                                              },
+                                              onChangeEnd: (value) {
+                                                _updateGimbalRotatePitch();
+                                              },
                                             ),
-                                            onPressed: () async {
-                                              await _videoRecordStart();
-                                            },
-                                          ),
-                                          OutlinedButton(
-                                            key: const Key('stoptVideoRecord'),
-                                            child: const Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Icon(
-                                                  Icons.stop,
-                                                ),
-                                                SizedBox(
-                                                  width: kSpacer / 2,
-                                                ),
-                                                Text('Stop Recording'),
-                                              ],
+                                            OutlinedButton(
+                                              key: const Key(
+                                                'startVideoRecord',
+                                              ),
+                                              child: const Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.fiber_manual_record,
+                                                  ),
+                                                  SizedBox(width: kSpacer / 2),
+                                                  Text('Start Recording'),
+                                                ],
+                                              ),
+                                              onPressed: () async {
+                                                await _videoRecordStart();
+                                              },
                                             ),
-                                            onPressed: () async {
-                                              await _videoRecordStop();
-                                            },
-                                          ),
-                                        ]),
+                                            OutlinedButton(
+                                              key: const Key(
+                                                'stoptVideoRecord',
+                                              ),
+                                              child: const Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(Icons.stop),
+                                                  SizedBox(width: kSpacer / 2),
+                                                  Text('Stop Recording'),
+                                                ],
+                                              ),
+                                              onPressed: () async {
+                                                await _videoRecordStop();
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -1106,11 +1021,7 @@ class ExampleWidgetState extends State<ExampleWidget> implements DjiFlutterApi {
 }
 
 class DronePropertyRow extends StatelessWidget {
-  const DronePropertyRow({
-    super.key,
-    required this.label,
-    required this.value,
-  });
+  const DronePropertyRow({super.key, required this.label, required this.value});
 
   final String label;
   final String value;
@@ -1121,14 +1032,8 @@ class DronePropertyRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        Text(label, style: Theme.of(context).textTheme.bodyMedium),
+        Text(value, style: Theme.of(context).textTheme.bodyLarge),
       ],
     );
   }
